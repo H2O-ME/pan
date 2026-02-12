@@ -561,7 +561,7 @@ export default function CloudreveImprovedUI() {
                       <td className="px-8 py-5">
                         <div className="flex items-center">
                           <div className="mr-5 p-2 rounded-2xl bg-slate-50 group-hover:bg-white transition-colors border border-transparent group-hover:border-blue-50">
-                            {React.cloneElement(getFileIcon(file.name, file.isDir) as React.ReactElement, { className: 'w-6 h-6' })}
+                            {React.cloneElement(getFileIcon(file.name, file.isDir) as React.ReactElement<any>, { className: 'w-6 h-6' })}
                           </div>
                           <div>
                             <p className="text-sm font-bold text-slate-700 group-hover:text-blue-600 transition-colors">
@@ -613,7 +613,7 @@ export default function CloudreveImprovedUI() {
             <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-white shrink-0">
               <div className="flex items-center">
                 <div className="p-2 bg-blue-50 rounded-xl mr-4">
-                  {React.cloneElement(getFileIcon(previewFile.name) as React.ReactElement, { className: 'w-6 h-6' })}
+                  {React.cloneElement(getFileIcon(previewFile.name) as React.ReactElement<any>, { className: 'w-6 h-6' })}
                 </div>
                 <div>
                   <h3 className="text-lg font-black text-slate-700 truncate max-w-md">{previewFile.name.split('/').pop()}</h3>

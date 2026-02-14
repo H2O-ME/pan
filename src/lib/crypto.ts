@@ -28,9 +28,9 @@ async function getEncryptionKey(password: string) {
 }
 
 /**
- * 加密 ArrayBuffer
+ * 加密数据
  */
-export const encryptFile = async (data: ArrayBuffer, password: string): Promise<string> => {
+export const encryptFile = async (data: BufferSource, password: string): Promise<string> => {
   const key = await getEncryptionKey(password);
   const iv = window.crypto.getRandomValues(new Uint8Array(12));
   const encrypted = await window.crypto.subtle.encrypt(
@@ -60,10 +60,10 @@ export const encryptFile = async (data: ArrayBuffer, password: string): Promise<
 /**
  * 解密数据
  */
-export const decryptFile = async (data: ArrayBuffer, password: string): Promise<ArrayBuffer> => {
+export const decryptFile = async (data: BufferSource, password: string): Promise<ArrayBuffer> => {
   const key = await getEncryptionKey(password);
   
-  const combined = new Uint8Array(data);
+  const combined = new Uint8Array(data instanceof ArrayBuffer ? data : data.buffer);
   const iv = combined.slice(0, 12);
   const content = combined.slice(12);
 

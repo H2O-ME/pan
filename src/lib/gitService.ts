@@ -49,10 +49,8 @@ export class GitCloudService {
   async uploadFile(path: string, content: string, encryptionKey: string, message: string = 'Upload file') {
     if (!this.octokit) throw new Error('Not initialized');
 
-    // 加密内容
-    const encryptedContent = encrypt(content, encryptionKey);
-    // Base64 编码
-    const base64Content = btoa(encryptedContent);
+    // 加密内容并获取 Base64 字符串
+    const base64Content = await encrypt(content, encryptionKey);
 
     // 检查文件是否存在以获取 sha
     let sha: string | undefined;
@@ -99,9 +97,7 @@ export class GitCloudService {
 
     if ('content' in response.data) {
       const base64Content = response.data.content.replace(/\n/g, '');
-      const encryptedContent = atob(base64Content);
-      const decryptedContent = decrypt(encryptedContent, encryptionKey);
-      return decryptedContent;
+      return await decrypt(base64Content, encryptionKey);
     }
 
     throw new Error('No content found');

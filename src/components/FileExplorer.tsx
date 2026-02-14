@@ -224,7 +224,7 @@ export default function FileExplorer() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          path: `${currentPath ? currentPath + '/' : ''}${newFolderName}/.keep`,
+          path: `${currentPath ? currentPath + '/' : ''}${newFolderName}/.gitkeep`,
           content: btoa('This is a placeholder for a new folder.'),
           message: `Create folder ${newFolderName}`
         })
@@ -637,9 +637,13 @@ export default function FileExplorer() {
                 onChange={handleUpload}
                 disabled={loading}
               />
-              <Button asChild size="sm" className="w-full bg-zinc-950 hover:bg-zinc-800 text-white rounded-xl h-10 px-4 font-bold transition-all active:scale-[0.96] cursor-pointer shadow-sm">
+              <Button 
+                asChild 
+                size="sm" 
+                className="w-full bg-zinc-950 hover:bg-zinc-800 text-white rounded-xl h-10 px-5 font-bold transition-all active:scale-[0.96] cursor-pointer shadow-md hover:shadow-lg flex items-center justify-center gap-2 group"
+              >
                 <span>
-                  <Upload className="w-3.5 h-3.5 mr-2" />
+                  <Upload className="w-4 h-4 transition-transform group-hover:-translate-y-0.5" />
                   Upload
                 </span>
               </Button>
@@ -647,10 +651,10 @@ export default function FileExplorer() {
             <Button 
               variant="outline" 
               size="sm"
-              className="rounded-xl h-10 border-zinc-200 hover:bg-zinc-50 px-4 font-bold text-zinc-700 bg-white shadow-sm active:scale-[0.96] transition-all" 
+              className="rounded-xl h-10 border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 px-5 font-bold text-zinc-700 bg-white shadow-sm hover:shadow-md active:scale-[0.96] transition-all flex items-center gap-2 group" 
               onClick={() => setIsCreateFolderOpen(true)}
             >
-              <Plus className="w-3.5 h-3.5 mr-2" />
+              <Plus className="w-4 h-4 text-zinc-400 group-hover:text-zinc-600 transition-colors" />
               Folder
             </Button>
           </div>
@@ -690,15 +694,22 @@ export default function FileExplorer() {
         </div>
 
         {/* 上传任务状态 */}
-        {uploads.length > 0 && (
-          <div className="mb-8 space-y-2">
-            <AnimatePresence>
+        <div className={cn("transition-all duration-500 ease-in-out", uploads.length > 0 ? "mb-8 opacity-100" : "mb-0 opacity-0 h-0 overflow-hidden")}>
+          <div className="space-y-2">
+            <AnimatePresence mode="popLayout">
               {uploads.map((u, i) => (
                 <motion.div 
                   key={u.name + i} 
-                  initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                  layout
+                  initial={{ opacity: 0, scale: 0.9, y: 20 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
-                  exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                  exit={{ opacity: 0, scale: 0.9, x: -20 }}
+                  transition={{ 
+                    type: "spring",
+                    stiffness: 500,
+                    damping: 30,
+                    mass: 1
+                  }}
                   className="bg-white border border-zinc-200 rounded-xl p-3 shadow-sm flex flex-col gap-2.5"
                 >
                   <div className="flex items-center gap-3">
@@ -715,12 +726,20 @@ export default function FileExplorer() {
                       <span className="text-xs font-bold text-zinc-900 tabular-nums">{Math.round(u.progress)}%</span>
                     </div>
                   </div>
-                  <Progress value={u.progress} className="h-1 rounded-full bg-zinc-100" />
+                  <Progress 
+                    value={u.progress} 
+                    className="h-1.5 bg-zinc-100" 
+                    indicatorClassName={cn(
+                      "transition-all duration-300",
+                      u.status === 'completed' ? "bg-emerald-500" : 
+                      u.status === 'error' ? "bg-red-500" : "bg-zinc-950"
+                    )}
+                  />
                 </motion.div>
               ))}
             </AnimatePresence>
           </div>
-        )}
+        </div>
 
         {/* 文件列表 - 提升对比度和可见度 */}
         <div className="bg-white border border-zinc-200 rounded-2xl overflow-hidden shadow-sm">

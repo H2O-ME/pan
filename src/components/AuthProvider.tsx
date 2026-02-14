@@ -1,7 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ShieldCheck, AlertCircle, Loader2 } from 'lucide-react';
+import { CheckCircle,
+  AlertCircle,
+  ExternalLink,
+  Loader2,
+  ShieldCheck
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -71,14 +76,13 @@ export default function AuthProvider({ children }: AuthProviderProps) {
             >
               <ShieldCheck className="w-6 h-6 text-white" />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-zinc-900">GitCloud Pan</h1>
-            <p className="text-zinc-500 text-sm">端到端加密的私有云存储解决方案</p>
+            <h1 className="text-2xl font-bold tracking-tight text-zinc-900">GitCloud</h1>
           </div>
 
           <Card className="border-zinc-200 shadow-xl shadow-black/5 rounded-3xl overflow-hidden bg-white">
             <CardHeader className="space-y-1.5 pb-6 pt-8 text-center">
               <CardTitle className="text-2xl font-extrabold text-zinc-900 tracking-tight">身份验证</CardTitle>
-              <CardDescription className="text-zinc-500 font-medium">请输入您的访问密码以解密存储空间</CardDescription>
+              <CardDescription className="text-zinc-500 font-medium">请输入您的访问密码以访问存储空间</CardDescription>
             </CardHeader>
             <CardContent className="pb-8 px-8">
               <form onSubmit={handleLogin} className="space-y-4">
@@ -117,7 +121,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
                       正在验证...
                     </>
                   ) : (
-                    "解锁云盘"
+                    "解锁存储空间"
                   )}
                 </Button>
               </form>
@@ -125,9 +129,17 @@ export default function AuthProvider({ children }: AuthProviderProps) {
           </Card>
           
           <div className="text-center">
-            <p className="text-zinc-400 text-xs">
-              Powered by GitHub API & Web Crypto API
-            </p>
+            <a 
+              href="https://blog.tianhw.top" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full pointer-events-auto select-none transition-all duration-300 hover:bg-zinc-100/50 active:scale-95 mx-auto w-fit"
+            >
+              <span className="text-[10px] font-bold text-zinc-300 uppercase tracking-[0.4em] group-hover:text-zinc-500 transition-colors">
+                Powered by THW
+              </span>
+              <ExternalLink className="w-2.5 h-2.5 text-zinc-200 group-hover:text-zinc-400 transition-colors" />
+            </a>
           </div>
         </div>
       </div>

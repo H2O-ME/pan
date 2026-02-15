@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Git Cloud Pan",
+  title: "GitCloud",
   description: "Secure Git-based Cloud Storage",
 };
 

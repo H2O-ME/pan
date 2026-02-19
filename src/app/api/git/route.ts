@@ -43,10 +43,33 @@ export async function GET(request: Request) {
       }
 
       if ('download_url' in response.data && response.data.download_url) {
-        // 返回直连地址，让前端直接 fetch 这个地址，避开 API 代理
-        return NextResponse.json({ 
-          downloadUrl: response.data.download_url,
-          name: response.data.name
+        // 使用流式代理转发 GitHub 直链内容
+        // 解决私有仓库无法直接访问直链的问题，同时避免 Base64 编解码的性能损耗
+        // 类型断言：确保 TS 知道这是一个包含必要属性的文件对象
+        const fileData = response.data as { name: string; size: number; download_url: string };
+        const downloadUrl = fileData.download_url;
+        
+        const fileResponse = await fetch(downloadUrl, {
+          headers: {
+            'Authorization': `token ${process.env.GITHUB_TOKEN}`
+          }
+        });
+
+        if (!fileResponse.ok) {
+          throw new Error(`Failed to fetch file from GitHub: ${fileResponse.statusText}`);
+        }
+
+        if (!fileResponse.body) {
+           throw new Error('File content is empty');
+        }
+
+        // 使用类型断言解决 NextResponse BodyInit 类型不匹配问题
+        return new NextResponse(fileResponse.body as unknown as BodyInit, {
+          headers: {
+            'Content-Type': 'application/octet-stream',
+            'Content-Disposition': `attachment; filename="${encodeURIComponent(fileData.name)}"`,
+            'Content-Length': String(fileData.size)
+          }
         });
       }
 
